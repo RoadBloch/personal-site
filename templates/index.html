@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Notes Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6fa; margin: 0; padding: 0; }
+    header { background: #1e3a8a; color: white; padding: 1rem; text-align: center; font-size: 1.5rem; }
+    .container { padding: 1rem 2rem; }
+    .course { background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .course h2 { margin: 0; font-size: 1.2rem; color: #1e3a8a; }
+    .file-list { margin-top: .5rem; }
+    .file-list li { list-style: none; margin: .25rem 0; padding: .25rem .5rem; background: #e5e7eb; border-radius: 8px; }
+    .grades { margin-top: 1rem; }
+    .grades input { margin: .25rem; padding: .25rem; }
+    .grades button { margin-top: .5rem; padding: .3rem .6rem; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .grades button:hover { background: #1d4ed8; }
+    .gpa { margin-top: .5rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>📘 My College Notes Dashboard</header>
+  <div class="container">
+
+    <div class="course">
+      <h2>E M A 202 – Dynamics</h2>
+      <ul class="file-list" id="dynamics-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('dynamics')">Add</button>
+        </div>
+        <ul id="dynamics-grades"></ul>
+        <div class="gpa" id="dynamics-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>E M A 303 – Mechanics of Materials</h2>
+      <ul class="file-list" id="mom-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('mom')">Add</button>
+        </div>
+        <ul id="mom-grades"></ul>
+        <div class="gpa" id="mom-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>M E/E M A 307 – Mechanics of Materials Lab</h2>
+      <ul class="file-list" id="lab-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('lab')">Add</button>
+        </div>
+        <ul id="lab-grades"></ul>
+        <div class="gpa" id="lab-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>M E 361 – Thermodynamics</h2>
+      <ul class="file-list" id="thermo-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('thermo')">Add</button>
+        </div>
+        <ul id="thermo-grades"></ul>
+        <div class="gpa" id="thermo-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>MATH 321 – Vector & Complex Calculus</h2>
+      <ul class="file-list" id="vcc-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('vcc')">Add</button>
+        </div>
+        <ul id="vcc-grades"></ul>
+        <div class="gpa" id="vcc-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>MATH 467 – Intro to Number Theory</h2>
+      <ul class="file-list" id="num-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('num')">Add</button>
+        </div>
+        <ul id="num-grades"></ul>
+        <div class="gpa" id="num-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>ED POL 150 – Intro to Tutoring</h2>
+      <ul class="file-list" id="tutor-files"></ul>
+      <div class="grades">
+        <h3>Grade Calculator</h3>
+        <div>
+          <input type="text" placeholder="Assignment name">
+          <input type="number" placeholder="Grade %">
+          <input type="number" placeholder="Weight %">
+          <button onclick="addGrade('tutor')">Add</button>
+        </div>
+        <ul id="tutor-grades"></ul>
+        <div class="gpa" id="tutor-gpa">Course Avg: --</div>
+      </div>
+    </div>
+
+    <div class="course">
+      <h2>📊 Overall GPA</h2>
+      <div class="gpa" id="overall-gpa">GPA: --</div>
+    </div>
+  </div>
+
+  <script>
+    const files = {dynamics:[],mom:[],lab:[],thermo:[],vcc:[],num:[],tutor:[]};
+
+    async function renderFiles() {
+  for (let course in files) {
+    const list = document.getElementById(course+"-files");
+    list.innerHTML = "";
+    try {
+      const res = await fetch(`/api/files/${course}`);
+      const data = await res.json();
+      data.forEach(f => {
+        const li = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `/files/${course}/${encodeURIComponent(f)}`;
+        link.textContent = f;
+        link.target = "_blank";
+        li.appendChild(link);
+        list.appendChild(li);
+      });
+    } catch (err) {
+      console.error("Error loading files for", course, err);
+    }
+  }
+}
+renderFiles();
+
+
+    const grades = {dynamics:[],mom:[],lab:[],thermo:[],vcc:[],num:[],tutor:[]};
+
+    function addGrade(course) {
+      const inputs = document.querySelectorAll(`#${course}-gpa ~ div input`);
+      const name = inputs[0].value;
+      const grade = parseFloat(inputs[1].value);
+      const weight = parseFloat(inputs[2].value);
+      if (!name || isNaN(grade) || isNaN(weight)) return;
+
+      grades[course].push({ name, grade, weight });
+      updateCourse(course);
+
+      inputs[0].value = "";
+      inputs[1].value = "";
+      inputs[2].value = "";
+    }
+
+    function updateCourse(course) {
+      const ul = document.getElementById(`${course}-grades`);
+      ul.innerHTML = "";
+      let total = 0, totalWeight = 0;
+      grades[course].forEach(g => {
+        const li = document.createElement('li');
+        li.textContent = `${g.name}: ${g.grade}% (weight ${g.weight}%)`;
+        ul.appendChild(li);
+        total += g.grade * (g.weight/100);
+        totalWeight += g.weight;
+      });
+      const avg = totalWeight ? (total / (totalWeight/100)) : 0;
+      document.getElementById(`${course}-gpa`).textContent = `Course Avg: ${avg.toFixed(2)}%`;
+      updateOverall();
+    }
+
+    function updateOverall() {
+      let sum = 0, count = 0;
+      for (let c in grades) {
+        if (grades[c].length) {
+          let total=0, weight=0;
+          grades[c].forEach(g => { total += g.grade*(g.weight/100); weight+=g.weight; });
+          if (weight>0) {
+            sum += total/(weight/100);
+            count++;
+          }
+        }
+      }
+      const gpa = count ? (sum/count) : 0;
+      document.getElementById("overall-gpa").textContent = `GPA: ${gpa.toFixed(2)}%`;
+    }
+  </script>
+</body>
+</html>
